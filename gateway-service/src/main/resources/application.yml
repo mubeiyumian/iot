@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      server-addr: localhost:8848 # nacos地址，单机模式
+    gateway:
+      routes:
+        # 用户服务路由
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        # 设备服务路由
+        - id: device-service
+          uri: lb://device-service
+          predicates:
+            - Path=/device/**
+          filters:
+            - StripPrefix=1
+      globalcors: # 全局跨域处理
+        add-to-simple-url-handler-mapping: true # 解决options请求被拦截
+        corsConfigurations:
+          '[/**]': # 拦截一切请求
+            allowedOrigins: # 允许哪些网站的跨域请求
+              - "http://localhost:8090"
+            allowedMethods: # 允许的跨域ajax的请求方式
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowedHeaders: "*" # 允许在请求中携带的头信息
+            allowCredentiaks: true # 是否允许携带cookie
+            maxAge: 360000 # 这次跨域检测的有效期
+
+  jwt:
+    user-secret-key: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0
+    user-ttl: 7200000
+    user-token-name: authentication
+
+server:
+  port: 9000

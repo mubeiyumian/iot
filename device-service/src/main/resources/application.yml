@@ -1,0 +1,74 @@
+server:
+  port: 9002
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/smart_iot_platform?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: # 无密码
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8    # 连接池最大连接数
+          max-idle: 8      # 连接池最大空闲连接数
+          min-idle: 0      # 连接池最小空闲连接数
+          max-wait: -1ms   # 连接池最大阻塞等待时间
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  application:
+    name: device-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+  mqtt:
+    # MQTT服务器地址，支持tcp://或ssl://，多个地址用逗号分隔
+    broker-url: tcp://192.168.242.137:1883
+    # 客户端ID（建议唯一）
+    client-id: springboot-mqtt-client-${random.value}
+    # 用户名
+    username: yun
+    # 密码
+    password: 123456
+    # 连接超时时间（秒）
+    connect-timeout: 30
+    # 会话是否持久化
+    clean-session: true
+    # 默认消息QoS级别 (0,1,2)
+    default-qos: 1
+    # 默认是否保留消息
+    default-retained: false
+    # 心跳间隔（秒）
+    keep-alive-interval: 60
+    # 订阅的主题（多个用逗号分隔）
+    subscribe-topics: lamp/report/#,sensor/report/#,$SYS/brokers/+/clients/#
+
+  influxdb:
+    url: http://localhost:8086
+    username: yun
+    password: 12345678
+    database: device_report
+    org: yun
+    token: 9CF_u1PBvEKHj9uSN1ZKQoUE9jhPYCjxl1km8jFiQegC4xHLQRsqfB-Je176KuerbikyhGQETNqfLTN7hVD6nQ==
+
+  jwt:
+    user-secret-key: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0
+    user-ttl: 7200000
+    user-token-name: authentication
